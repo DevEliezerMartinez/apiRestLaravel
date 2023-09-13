@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\API\V1\ProductController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,21 +16,25 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Auth
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
 
-//Public routes
-Route::post('register', [AuthController::class, 'registerUser']);
-Route::post('login', [AuthController::class, 'loginUser']);
+// Public
 Route::get('products', [ProductController::class, 'index']);
 
 //Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::post('account', [AuthController::class, 'getInformationUser']);
-    Route::post('newProduct', [ProductController::class, 'AddProduct']);
-    Route::get('logout', [AuthController::class, 'logoutUser']);
-    Route::put('modifyProduct', [ProductController::class, 'modifyProduct']);
-    Route::delete('deleteProduct', [ProductController::class, 'deleteProduct']);
+    // Auth
+    Route::post('me', [AuthController::class, 'me']);
+    Route::get('logout', [AuthController::class, 'logout']);
+
+    // Products
+    Route::get('products', [ProductController::class, 'index']);
+    Route::post('products', [ProductController::class, 'create']);
+    Route::get('products/{id}', [ProductController::class, 'get']);
+    Route::put('products/{id}', [ProductController::class, 'update']);
+    Route::delete('products/{id}', [ProductController::class, 'delete']);
+
 });

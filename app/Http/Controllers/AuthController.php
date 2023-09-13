@@ -11,7 +11,7 @@ use \stdClass;
 
 class AuthController extends Controller
 {
-    public function registerUser(Request $request)
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -39,7 +39,7 @@ class AuthController extends Controller
             ->json(['data' => $user, 'access_token' => $token, 'token_type' => 'Bearer',]);
     }
 
-    public function loginUser(Request $request)
+    public function login(Request $request)
     {
 
         if (!Auth::attempt($request->only('email', 'password'))) {
@@ -60,14 +60,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logoutUser(Request $request)
+    public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();
 
         return ['message' => 'you have succesfully logged out and the tokens was succesfully deleted'];
     }
 
-    public function getInformationUser(Request $request)
+    public function me(Request $request)
     {
 
         /* $user = User::where('email', $request['email'])->firstOrFail(); */
